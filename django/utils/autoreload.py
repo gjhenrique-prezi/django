@@ -297,7 +297,7 @@ def restart_with_reloader():
         new_environ = os.environ.copy()
         new_environ["RUN_MAIN"] = 'true'
         exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
-        print(f"Child died with exit_code {exit_code}"
+        print(f"Child died with exit_code {exit_code}")
         if exit_code != 3:
             return exit_code
 
