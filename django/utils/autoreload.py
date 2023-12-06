@@ -167,6 +167,10 @@ def inotify_code_changed():
             else:
                 EventHandler.modified_code = FILE_MODIFIED
 
+   from pyinotify import log
+   import logging
+   log.setLevel(logging.DEBUG)
+                
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, EventHandler())
 
@@ -186,7 +190,6 @@ def inotify_code_changed():
             pyinotify.IN_MOVE_SELF
         )
         for path in gen_filenames(only_new=True):
-            print(f"Watching {path}")
             wm.add_watch(path, mask)
 
     print("calling function")
@@ -304,7 +307,7 @@ def restart_with_reloader():
 
 def python_reloader(main_func, args, kwargs):
     if os.environ.get("RUN_MAIN") == "true":
-        print("Calling reloader within child")
+        print(f"Calling reloader within child {os.getpid()}")
         thread.start_new_thread(main_func, args, kwargs)
         try:
             reloader_thread()
@@ -312,7 +315,7 @@ def python_reloader(main_func, args, kwargs):
             pass
     else:
         try:
-            print("Calling relaoder with main process")
+            print(f"Calling relaoder with main process {os.getpid()}")
             exit_code = restart_with_reloader()
             if exit_code < 0:
                 os.kill(os.getpid(), -exit_code)
