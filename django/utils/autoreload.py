@@ -170,7 +170,7 @@ def inotify_code_changed():
    from pyinotify import log
    import logging
    log.setLevel(logging.DEBUG)
-                
+
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, EventHandler())
 
