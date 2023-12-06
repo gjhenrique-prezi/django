@@ -186,14 +186,17 @@ def inotify_code_changed():
             pyinotify.IN_MOVE_SELF
         )
         for path in gen_filenames(only_new=True):
+            print(f"Watching {path}")
             wm.add_watch(path, mask)
 
+    print("calling function")
     # New modules may get imported when a request is processed.
     request_finished.connect(update_watch)
 
     # Block until an event happens.
     update_watch()
     notifier.check_events(timeout=None)
+    print("new function here and there")
     notifier.read_events()
     notifier.process_events()
     notifier.stop()
@@ -271,12 +274,15 @@ def ensure_echo_on():
 def reloader_thread():
     ensure_echo_on()
     if USE_INOTIFY:
+        print("Using inotify")
         fn = inotify_code_changed
     else:
+        print("Using normal")
         fn = code_changed
     while RUN_RELOADER:
         change = fn()
         if change == FILE_MODIFIED:
+            print("File changed. Killing process")
             sys.exit(3)  # force reload
         elif change == I18N_MODIFIED:
             reset_translations()
@@ -291,12 +297,14 @@ def restart_with_reloader():
         new_environ = os.environ.copy()
         new_environ["RUN_MAIN"] = 'true'
         exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
+        print(f"Child died with exit_code {exit_code}"
         if exit_code != 3:
             return exit_code
 
 
 def python_reloader(main_func, args, kwargs):
     if os.environ.get("RUN_MAIN") == "true":
+        print("Calling reloader within child")
         thread.start_new_thread(main_func, args, kwargs)
         try:
             reloader_thread()
@@ -304,6 +312,7 @@ def python_reloader(main_func, args, kwargs):
             pass
     else:
         try:
+            print("Calling relaoder with main process")
             exit_code = restart_with_reloader()
             if exit_code < 0:
                 os.kill(os.getpid(), -exit_code)
@@ -333,4 +342,5 @@ def main(main_func, args=None, kwargs=None):
         reloader = python_reloader
 
     wrapped_main_func = check_errors(main_func)
+    print("Calling reloader")
     reloader(wrapped_main_func, args, kwargs)
