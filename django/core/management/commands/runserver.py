@@ -6,6 +6,7 @@ import re
 import socket
 import sys
 from datetime import datetime
+import traceback
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand, CommandError
@@ -95,6 +96,8 @@ class Command(BaseCommand):
 
         if use_reloader:
             autoreload.main(self.inner_run, None, options)
+            traceback.print_exc()
+            print("What am I doing here?")
         else:
             self.inner_run(None, **options)
 

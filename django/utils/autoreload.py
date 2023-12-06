@@ -170,7 +170,6 @@ def inotify_code_changed():
             else:
                 EventHandler.modified_code = FILE_MODIFIED
 
-    log.setLevel(logging.DEBUG)
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, EventHandler())
 
@@ -283,6 +282,7 @@ def reloader_thread():
         print("Using normal")
         fn = code_changed
     while RUN_RELOADER:
+        print("Checking if file is modified")
         change = fn()
         if change == FILE_MODIFIED:
             print("File changed. Killing process")
