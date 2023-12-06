@@ -290,7 +290,8 @@ def reloader_thread():
                 sys.exit(3)  # force reload
             except SystemExit as e:
                 print(f"Raised correctly {e}")
-                traceback.print_exc()
+                for line in traceback.format_stack():
+                    print(line.strip())
                 raise
             except Exception as e:
                 print(f"Caught an exception {e}")
