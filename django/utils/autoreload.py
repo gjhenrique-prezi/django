@@ -170,7 +170,7 @@ def inotify_code_changed():
             else:
                 EventHandler.modified_code = FILE_MODIFIED
 
-   log.setLevel(logging.DEBUG)
+    log.setLevel(logging.DEBUG)
 
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, EventHandler())
