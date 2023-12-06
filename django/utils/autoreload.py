@@ -37,6 +37,9 @@ import sys
 import time
 import traceback
 
+from pyinotify import log
+import logging
+
 from django.apps import apps
 from django.conf import settings
 from django.core.signals import request_finished
@@ -167,8 +170,6 @@ def inotify_code_changed():
             else:
                 EventHandler.modified_code = FILE_MODIFIED
 
-   from pyinotify import log
-   import logging
    log.setLevel(logging.DEBUG)
 
     wm = pyinotify.WatchManager()
