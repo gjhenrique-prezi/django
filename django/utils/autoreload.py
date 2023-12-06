@@ -286,9 +286,18 @@ def reloader_thread():
         change = fn()
         if change == FILE_MODIFIED:
             print("File changed. Killing process")
-            sys.exit(3)  # force reload
+            try:
+                sys.exit(3)  # force reload
+            except SystemExit as e:
+                print(f"Raised correctly {e}")
+                raise
+            except Exception as e:
+                print(f"Caught an exception {e}")
+                raise
         elif change == I18N_MODIFIED:
             reset_translations()
+
+        print("Why is it here?")
         time.sleep(1)
 
 
