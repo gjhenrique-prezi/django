@@ -31,6 +31,7 @@
 # Avoid importing `importlib` from this package.
 from __future__ import absolute_import
 
+import subprocess
 import os
 import signal
 import sys
@@ -310,7 +311,7 @@ def restart_with_reloader():
             args = ['"%s"' % arg for arg in args]
         new_environ = os.environ.copy()
         new_environ["RUN_MAIN"] = 'true'
-        exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
+        exit_code = subprocess.run(args, env=new_environ, close_fds=False)
         print(f"Child died with exit_code {exit_code}")
         if exit_code != 3:
             return exit_code
